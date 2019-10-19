@@ -1,0 +1,14 @@
+TRUNCATE
+    reframe_mistakes
+    RESTART IDENTITY CASCADE;
+
+INSERT INTO reframe_mistakes (user_id, posting_date, mistake_nickname, mistake, box_checked, went_wrong, why_wrong, what_doing, what_learn, plan_one, plan_two, plan_three, plan_four, plan_five)
+VALUES
+    ('1', 'now()', 'too old', 'not taking up code when I was a kid', 'true', 'now coding is hard because I didnt do it as a kid', 'my mom didnt make me do it', 'I just wanted to be a pro surfer and didnt want to be on a computer', 'start em early, make the big bucks', 'start my kids early and keep learning', 'look at different ways to learn at a fast pace', 'look at bootcamps', 'go to UW for comp sci', 'make Itai teach me'),
+    ('2', 'now()', 'too old', 'not taking up code when I was a kid', 'true', 'now coding is hard because I didnt do it as a kid', 'my mom didnt make me do it', 'I just wanted to be a pro surfer and didnt want to be on a computer', 'start em early, make the big bucks', 'start my kids early and keep learning', 'look at different ways to learn at a fast pace', 'look at bootcamps', 'go to UW for comp sci', 'make Itai teach me'),
+    ('2', 'now()', 'too old', 'not taking up code when I was a kid', 'true', 'now coding is hard because I didnt do it as a kid', 'my mom didnt make me do it', 'I just wanted to be a pro surfer and didnt want to be on a computer', 'start em early, make the big bucks', 'start my kids early and keep learning', 'look at different ways to learn at a fast pace', 'look at bootcamps', 'go to UW for comp sci', 'make Itai teach me'),
+    ('3', 'now()', 'too old', 'not taking up code when I was a kid', 'true', 'now coding is hard because I didnt do it as a kid', 'my mom didnt make me do it', 'I just wanted to be a pro surfer and didnt want to be on a computer', 'start em early, make the big bucks', 'start my kids early and keep learning', 'look at different ways to learn at a fast pace', 'look at bootcamps', 'go to UW for comp sci', 'make Itai teach me'),
+    ('3', 'now()', 'too old', 'not taking up code when I was a kid', 'true', 'now coding is hard because I didnt do it as a kid', 'my mom didnt make me do it', 'I just wanted to be a pro surfer and didnt want to be on a computer', 'start em early, make the big bucks', 'start my kids early and keep learning', 'look at different ways to learn at a fast pace', 'look at bootcamps', 'go to UW for comp sci', 'make Itai teach me'),
+    ('3', 'now()', 'too old', 'not taking up code when I was a kid', 'true', 'now coding is hard because I didnt do it as a kid', 'my mom didnt make me do it', 'I just wanted to be a pro surfer and didnt want to be on a computer', 'start em early, make the big bucks', 'start my kids early and keep learning', 'look at different ways to learn at a fast pace', 'look at bootcamps', 'go to UW for comp sci', 'make Itai teach me')
+
+-- psql -U zachgw -d reframe-main -f ./seeds/seed.mistakes.sql
