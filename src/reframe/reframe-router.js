@@ -54,16 +54,19 @@ reframeRouter
         knexInstance
             .from('reframe_users')
             .where({ username })
-            .first() //do I need this?
+            .first()    
             .then(user => {
                 if (!user || !bcrypt.compareSync(user_password, user.user_password)) 
                 return res.status(400).json({
                     error: 'Incorrect username or password' 
                 })
+                res.status(201).json(user)
+                console.log(user)
             })
-            .then(userLog => 
-               res.status(201).json(userLog)
-            ) 
+            .then(userLog => {
+                console.log(userLog, 'test')
+                res.status(201).json(userLog)
+            }) 
             .catch(next)
     })
 
@@ -84,7 +87,6 @@ reframeRouter
 
 reframeRouter
     .route('/api/mistake')
-    .all(requireAuth)
     .get((req, res, next) => {
         knexInstance
             .select('*')
@@ -94,7 +96,7 @@ reframeRouter
             })
             .catch(next)
     })
-    .post(jsonParser, (req, res, next) => {
+    .post(requireAuth, jsonParser, (req, res, next) => {
         const { 
             posting_date, 
             mistake_nickname,
