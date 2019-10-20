@@ -45,7 +45,7 @@ reframeRouter
         const {username, user_password} = req.body
         const loginUser = {username, user_password}
 
-        for (const [key, value] of Object.entries(loginUser)) //explore this
+        for (const [key, value] of Object.entries(loginUser))
             if (value == null)
                 return res.status(400).json({
                     error: `Missing '${key}' in request body`
@@ -56,14 +56,14 @@ reframeRouter
             .where({ username })
             .first() //do I need this?
             .then(user => {
-                if (!user) 
+                if (!user || !bcrypt.compareSync(user_password, user.user_password)) 
                 return res.status(400).json({
-                    error: 'Incorrect username or password'
+                    error: 'Incorrect username or password' 
                 })
             })
-            .then(user => {
-                res.status(201).json(user)
-            })
+            .then(userLog => 
+               res.status(201).json(userLog)
+            ) 
             .catch(next)
     })
 
