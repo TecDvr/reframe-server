@@ -63,15 +63,16 @@ reframeRouter
                 res.status(201).json(user)
                 console.log(user)
             })
-            .then(userLog => {
-                console.log(userLog, 'test')
-                res.status(201).json(userLog)
-            }) 
+            // .then(userLog => {
+            //     console.log(userLog, 'test')
+            //     res.status(201).json(userLog)
+            // }) 
             .catch(next)
     })
 
 reframeRouter
     .route('/api/user/:id')
+    .all(requireAuth)
     .get((req, res, next) => {
         const {id} = req.params
 
@@ -159,6 +160,32 @@ reframeRouter
                 res.status(200).json(mistake)
             })
             .catch(next)
+    })
+
+reframeRouter
+    .route('/api/comments/:mistake_id')
+    .get((req, res, next) => {
+        const {id} = req.params
+        knexInstance
+            .from('reframe_comments')
+            .select('*')
+            .where('id', id)
+            .then(results => {
+                res.status(200).json(results)
+            })
+            .catch(next)
+    })
+    .post((req, res, next) => {
+        const newComment = {comment, liked, disliked}
+        const {mistake_id} = req.params
+
+        knexInstance
+            .insert(newComment)
+            .into('reframe_comments')
+            .where('mistake_id', mistake_id)
+            .then(response => {
+                res.status(201).json(response)
+            })
     })
 
 module.exports = reframeRouter;
