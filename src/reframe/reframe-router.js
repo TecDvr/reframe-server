@@ -28,7 +28,7 @@ reframeRouter
     })
     .post(jsonParser, (req, res, next) => {
         const {username, email} = req.body
-        const user_password = bcrypt.hashSync(req.body.user_password, 8);
+        const user_password = bcrypt.hashSync(req.body.user_password.trim(), 8);
         const newUser = {username, user_password, email}
 
         knexInstance
@@ -43,6 +43,7 @@ reframeRouter
     .route('/api/login')
     .post(jsonBodyParser, (req, res, next) => {
         const {username, user_password} = req.body
+        console.log(username, user_password);
         const loginUser = {username, user_password}
 
         for (const [key, value] of Object.entries(loginUser))
@@ -58,6 +59,8 @@ reframeRouter
             })
             .first() 
             .then(user => {
+                console.log(user);
+                console.log(bcrypt.compareSync(user_password, user.user_password));
                 if (!user || !bcrypt.compareSync(user_password, user.user_password)) 
                 return res.status(400).json({
                     error: 'Incorrect username or password' 
@@ -65,10 +68,6 @@ reframeRouter
                 res.status(201).json(user)
                 console.log(user)
             })
-            // .then(userLog => {
-            //     console.log(userLog, 'test')
-            //     res.status(201).json(userLog)
-            // }) 
             .catch(next)
     })
 
