@@ -53,8 +53,10 @@ reframeRouter
 
         knexInstance
             .from('reframe_users')
-            .where({ username })
-            .first()    
+            .where({
+                username: username
+            })
+            .first() 
             .then(user => {
                 if (!user || !bcrypt.compareSync(user_password, user.user_password)) 
                 return res.status(400).json({
@@ -147,6 +149,23 @@ reframeRouter
     })
 
 reframeRouter
+    .route('/api/plancheck/:id')
+    .patch(jsonParser, (req, res, next) => {
+        const {plan_one_check, plan_two_check, plan_three_check, plan_four_check, plan_five_check} = req.body
+        const checkBoxUpdate = {plan_one_check, plan_two_check, plan_three_check, plan_four_check, plan_five_check}
+        const { id } = req.params
+
+        knexInstance
+            .into('reframe_mistakes')
+            .where( {id} )
+            .update(checkBoxUpdate)
+            .then(plan => {
+                res.status(204).end();
+            })
+            .catch(next)
+    })
+
+reframeRouter
     .route('/api/mistake/:user_id')
     .all(requireAuth)
     .get((req, res, next) => {
@@ -161,28 +180,29 @@ reframeRouter
             })
             .catch(next)
     })
-
+  
 reframeRouter
-    .route('/api/comments/:mistake_id')
+    .route('/api/comment/:mistake_id')
     .get((req, res, next) => {
-        const {id} = req.params
+        const {mistake_id} = req.params
+
         knexInstance
             .from('reframe_comments')
             .select('*')
-            .where('id', id)
+            .where('mistake_id', mistake_id)
             .then(results => {
                 res.status(200).json(results)
             })
             .catch(next)
     })
-    .post((req, res, next) => {
-        const newComment = {comment, liked, disliked}
+    .post(jsonParser, (req, res, next) => {
+        const { comment, liked } = req.body
         const {mistake_id} = req.params
+        const newComment = { mistake_id, comment, liked }
 
         knexInstance
             .insert(newComment)
             .into('reframe_comments')
-            .where('mistake_id', mistake_id)
             .then(response => {
                 res.status(201).json(response)
             })
