@@ -1,6 +1,6 @@
 const express = require('express');
 const knex = require('knex');
-const { DB_URL } = require('../config');
+const { DATABASE_URL } = require('../config');
 const bcrypt = require('bcryptjs');
 const { requireAuth } = require('../middleware/basic-auth');
 
@@ -10,8 +10,10 @@ const jsonBodyParser = express.json()
 
 const knexInstance = knex({
     client: 'pg',
-    connection: DB_URL,
+    connection: DATABASE_URL,
 });
+
+//process.env.NODE_ENV == 'test' ? TEST_DATABASE_URL : 
 
 reframeRouter
     .route('/api/user')
@@ -176,6 +178,21 @@ reframeRouter
             .where('user_id', user_id)
             .then(mistake => {
                 res.status(200).json(mistake)
+            })
+            .catch(next)
+    })
+
+reframeRouter
+    .route('/api/checkbox/:mistake_id')
+    .get((req, res, next) => {
+        const {mistake_id} = req.params
+
+        knexInstance
+            .from('reframe_mistakes')
+            .select('*')
+            .where('id', mistake_id)
+            .then(results => {
+                res.status(200).json(results)
             })
             .catch(next)
     })

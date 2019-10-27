@@ -1,10 +1,10 @@
 const knex = require('knex')
-const { DB_URL } = require('../config');
+const { DATABASE_URL } = require('../config');
 const bcrypt = require('bcryptjs');
 
 const knexInstance = knex({
     client: 'pg',
-    connection: DB_URL,
+    connection: DATABASE_URL,
 });
 
 function requireAuth(req, res, next) {
