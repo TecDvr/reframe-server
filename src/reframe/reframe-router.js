@@ -45,7 +45,6 @@ reframeRouter
     .route('/api/login')
     .post(jsonBodyParser, (req, res, next) => {
         const {username, user_password} = req.body
-        console.log(username, user_password);
         const loginUser = {username, user_password}
 
         for (const [key, value] of Object.entries(loginUser))
@@ -56,19 +55,14 @@ reframeRouter
 
         knexInstance
             .from('reframe_users')
-            .where({
-                username: username
-            })
+            .where({ username })
             .first() 
             .then(user => {
-                console.log(user);
-                console.log(bcrypt.compareSync(user_password, user.user_password));
                 if (!user || !bcrypt.compareSync(user_password, user.user_password)) 
                 return res.status(400).json({
                     error: 'Incorrect username or password' 
                 })
                 res.status(201).json(user)
-                console.log(user)
             })
             .catch(next)
     })
@@ -110,6 +104,7 @@ reframeRouter
             why_wrong,
             what_doing,
             what_learn,
+            how_bad,
             plan_one,
             plan_two,
             plan_three,
@@ -125,6 +120,7 @@ reframeRouter
             why_wrong,
             what_doing,
             what_learn,
+            how_bad,
             plan_one,
             plan_two,
             plan_three,
@@ -145,6 +141,21 @@ reframeRouter
             .into('reframe_mistakes')
             .then(results => {
                 res.status(201).json(results)
+            })
+            .catch(next)
+    })
+
+reframeRouter
+    .route('/api/delete/:mistake_id')
+    .delete((req, res, next) => {
+        const {mistake_id} = req.params
+
+        knexInstance
+            .from('reframe_mistakes')
+            .where('id', mistake_id)
+            .delete()
+            .then(deleted => {
+                res.status(204).end()
             })
             .catch(next)
     })
