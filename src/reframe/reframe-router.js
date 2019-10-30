@@ -139,7 +139,9 @@ reframeRouter
         knexInstance
             .insert(newMistake)
             .into('reframe_mistakes')
+            .returning('*')
             .then(results => {
+                console.log(results)
                 res.status(201).json(results)
             })
             .catch(next)
@@ -233,6 +235,7 @@ reframeRouter
             .then(response => {
                 res.status(201).json(response)
             })
+            .catch(next)
     })
 
 module.exports = reframeRouter;

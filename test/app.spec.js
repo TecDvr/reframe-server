@@ -1,11 +1,11 @@
 const app = require('../src/app');
 const knex = require('knex');
 
-/*describe('App', () => {
+describe('App', () => {
   it('GET / responds with 200 containing "Hello, world!"', () => {
     return supertest(app).get('/').expect(200)
   })
-})*/
+})
 
 describe('MAIN', () => {
   let db
@@ -14,6 +14,18 @@ describe('MAIN', () => {
     "username": "testUser",
     "user_password": "testPassword",
     "email": "test@gmail.com"
+  }
+
+  const comment = {
+    commment: 'Testing'
+  }
+
+  const userPatch = {
+    plan_one_check: false,
+    plan_two_check: true,
+    plan_three_check: true,
+    plan_four_check: true,
+    plan_five_check: false
   }
 
   const mistake = { 
@@ -29,7 +41,8 @@ describe('MAIN', () => {
     "plan_two": "test",
     "plan_three": "test",
     "plan_four": "test",
-    "plan_five": "test"
+    "plan_five": "test",
+    "how_bad": "4"
 }
 
   function makeAuthHeader(user) {
@@ -42,19 +55,16 @@ describe('MAIN', () => {
       client: 'pg',
       connection: process.env.TEST_DATABASE_URL,
     })
-    console.log(process.env.TEST_DATABASE_URL, 'test')
     app.set('db', db)
   })
 
   before(() => {
-      /*return db
+      return db
         .into('reframe_users')
-        .insert(user)*/
+        .insert(user)
   })
 
   after(() => db.destroy())
-
-  // before(() => db('reframe_users').truncate())
 
   describe('USER', () => {
     it('GET /api/user responds with 200', () => {
@@ -72,9 +82,8 @@ describe('MAIN', () => {
     })
   })
 
-  describe('USER:ID', () => { //Change to test error
+  describe('USER:ID', () => {
     it('GET /api/user/:id responds with 200', () => {
-      // this will always work because there is no user 4
       return supertest(app).get('/api/user/4').set('Authorization', makeAuthHeader(user)).expect(200).expect('Content-Type', /json/)
     })
   })
@@ -85,9 +94,41 @@ describe('MAIN', () => {
     });
 
     it('POST /api/mistake responds with 201', () => {
-      // need a way to send a specific user id
-      //return supertest(app).post('/api/mistake').set('Authorization', makeAuthHeader(user)).send(mistake).expect(201)
+      return supertest(app).post('/api/mistake').set('Authorization', makeAuthHeader(user)).send(mistake).expect(201)
+    });
+  })
+
+  describe('DELETE', () => {
+    it('DELETE /api/delete/:mistake_id responds with 204', () => {
+      return supertest(app).delete('/api/delete/1').set('Authorization', makeAuthHeader(user)).expect(204)
     })
   })
 
+  describe('PLANCHECK', () => {
+    it('PLANCHECK /api/plancheck/:id responds with 204', () => {
+      return supertest(app).patch('/api/plancheck/15').set('Authorization', makeAuthHeader(user)).send(userPatch).expect(204)
+    })
+  })
+
+  describe('MISTAKE ID', () => {
+    it('GET /api/mistake/:id responds with 200', () => {
+      return supertest(app).get('/api/mistake/4').set('Authorization', makeAuthHeader(user)).expect(200).expect('Content-Type', /json/)
+    });
+  })
+
+  describe('CHECK BOX', () => {
+    it('GET /api/checkbox/:mistake_id responds with 200', () => {
+      return supertest(app).get('/api/checkbox/4').set('Authorization', makeAuthHeader(user)).expect(200).expect('Content-Type', /json/)
+    });
+  })
+
+  describe('COMMENT', () => {
+    it('GET /api/comment/:mistake_id with 200', () => {
+      return supertest(app).get('/api/comment/1').expect(200).expect('Content-Type', /json/)
+    });
+
+    it('POST /api/comment/:mistake_id responds with 201', () => {
+      return supertest(app).post('/api/comment/55').set('Authorization', makeAuthHeader(user)).send(comment).expect(201)
+    });
+  })
 })
