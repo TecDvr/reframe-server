@@ -13,8 +13,6 @@ const knexInstance = knex({
     connection: DATABASE_URL,
 });
 
-//process.env.NODE_ENV == 'test' ? TEST_DATABASE_URL : 
-
 reframeRouter
     .route('/api/user')
     .get((req, res, next) => {
